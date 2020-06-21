@@ -33,13 +33,15 @@ function setup() {
   input2 = createInput();
   input2.position(20, 40);
   /////// EL PRIMER INPUTS ES PARA MODIFICAR LA VELOCIDAD
-  button = createButton('Aceptar');
-  button.position(input2.x + input2.width, 40);
-  button.mousePressed(cambioVel);
+  button2 = createButton('Aceptar');
+  button2.position(input2.x + input2.width, 40);
+  button2.mousePressed(cambioVel);
 
   mic = new p5.AudioIn();
 
-  mic.start();
+  button3 = createButton('Activar Micrófono');
+  button3.position(25,height-25);
+  button3.mousePressed(micro);
   
 }
 
@@ -174,3 +176,7 @@ function marca() {
       marca();
     }
   }
+
+function micro(){
+    mic.start();
+}
