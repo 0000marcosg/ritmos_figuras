@@ -46,6 +46,8 @@ function setup() {
 function draw() {
   background(220);
   stroke(0);
+  fill(0);
+  circle(200,200,50);
   noFill();
   circle(200, 200, 200);
   fill(250, 150, 0);
@@ -162,5 +164,13 @@ function marca() {
         }
       }
       //print(this.inmV);
+    }
+  }
+
+
+  function mousePressed() {
+    let d = dist(200, 200, mouseX, mouseY);
+    if ( d < 25){
+      marca();
     }
   }
