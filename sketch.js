@@ -1,9 +1,9 @@
-let cr = 200;
+let cr = 300;
 let ang = 1.57,
   dang = 0.5;
 let x = 200;
 let y = 200;
-let r = 100;
+let r = 150;
 let npuntos = 6;
 let contador = 0;
 let cooldown;
@@ -18,40 +18,53 @@ let mic;
 var input1;
 var input2;
 
+//playmode
+var playON = false;
+
+//checkbox y estatus
+var checkbox, statusText;
 
 function setup() {
-  createCanvas(400, 400);
+  var canvas = createCanvas(600, 600);
+  canvas.center();
   contador = 0;
   cooldown = 0;
   input1 = createInput();
-  input1.position(20, 20);
+  input1.position(canvas.x + 20 , canvas.y+20);
   /////// EL PRIMER INPUTS ES PARA MODIFICAR EL NUMERO MÁXIMO DE PUNTOS
   button = createButton('Aceptar');
-  button.position(input1.x + input1.width, 20);
+  button.position(input1.x + input1.width, input1.y);
   button.mousePressed(cambioNum);
 
   input2 = createInput();
-  input2.position(20, 40);
-  /////// EL PRIMER INPUTS ES PARA MODIFICAR LA VELOCIDAD
+  input2.position(canvas.x + 20, canvas.y+40);
+  /////// EL SEGUNDO INPUTS ES PARA MODIFICAR LA VELOCIDAD
   button2 = createButton('Aceptar');
-  button2.position(input2.x + input2.width, 40);
+  button2.position(input2.x + input2.width, canvas.y+40);
   button2.mousePressed(cambioVel);
 
   mic = new p5.AudioIn();
 
   button3 = createButton('Activar Micrófono');
-  button3.position(25,height-25);
+  button3.position(input2.x,input2.y + canvas.height -100);
   button3.mousePressed(micro);
   
+
+  ///CHECKBOX para playmode y texto de status
+  checkbox = createCheckbox('' , false);
+  checkbox.changed(playMode);
+  checkbox.position(canvas.x + canvas.width/2, button3.y );
+  statusText = createP("Play Mode : ❌");
+  statusText.position(checkbox.x + 30, button3.y - 18); 
 }
 
 function draw() {
   background(220);
   stroke(0);
   fill(0);
-  circle(200,200,50);
+  circle(canvas.width/2, canvas.height/2,50);
   noFill();
-  circle(200, 200, 200);
+  circle(canvas.width/2, canvas.height/2, 300);
   fill(250, 150, 0);
   noStroke();
 
@@ -81,7 +94,9 @@ function draw() {
   ////////// BORRAR PUNTOS LUEGO DE UN CICLO
   for (let i = puntos.length - 1; i >= 0; i--) {
     if (puntos[i].contiene(ex, ey) && puntos[i].inmV == false) {
+      if(playON === false){
       puntos.splice(i, 1);
+      }
     }
   }
 
@@ -171,12 +186,31 @@ function marca() {
 
 
   function mousePressed() {
-    let d = dist(200, 200, mouseX, mouseY);
+    let d = dist(canvas.width/2, canvas.height/2, mouseX, mouseY);
     if ( d < 25){
       marca();
     }
   }
 
 function micro(){
-    mic.start();
+    mic.start( null, errMic)  
+
+
+}
+
+//CALLBACK PARA MICROFONO NO DETECTADO
+function errMic() {
+  alert("Microfono no detectado");
+}
+
+function playMode() {
+  if (this.checked()) {
+    //console.log('playmodeON!');
+    playON = true;
+    statusText.html('Play Mode : ✅', null);
+  } else {
+    //console.log('playmodeOFF!');
+    playON = false;
+    statusText.html('Play Mode : ❌', null);
+  }
 }
